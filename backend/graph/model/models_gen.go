@@ -2,25 +2,45 @@
 
 package model
 
+type List struct {
+	ID          string      `json:"id"`
+	Title       string      `json:"title"`
+	Description *string     `json:"description,omitempty"`
+	Entries     []*Question `json:"entries"`
+}
+
 type Mutation struct {
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type NewList struct {
+	Name        string  `json:"name"`
+	Description *string `json:"description,omitempty"`
+}
+
+type NewQuestion struct {
+	Title      string `json:"title"`
+	URL        string `json:"url"`
+	Difficulty string `json:"difficulty"`
 }
 
 type Query struct {
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+type Question struct {
+	ID         string `json:"id"`
+	Title      string `json:"title"`
+	URL        string `json:"url"`
+	Difficulty string `json:"difficulty"`
+	Complete   bool   `json:"complete"`
 }
 
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+type UpdateList struct {
+	Name        *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
+type UpdateQuestion struct {
+	Title      *string `json:"title,omitempty"`
+	URL        *string `json:"url,omitempty"`
+	Difficulty *string `json:"difficulty,omitempty"`
 }

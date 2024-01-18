@@ -3,40 +3,67 @@
 # https://gqlgen.com/getting-started/
 
 
-type ListEntry {
+type Question {
+  id: ID!
   title: String!
+  url: String!
   difficulty: String!
-  index: int!
-  complete: bool!
+  complete: Boolean!
 }
 
 type List {
+  id: ID!
   title: String!
-  description: String!
-  entries: [ListEntry!]!
+  description: String
+  entries: [Question!]!
 }
 
-# type Todo {
-#   id: ID!
-#   text: String!
-#   done: Boolean!
-#   user: User!
-# }
+input NewQuestion {
+  title: String!
+  url: String!
+  difficulty: String!
+}
 
-# type User {
-#   id: ID!
-#   name: String!
-# }
+input UpdateQuestion {
+  title: String
+  url: String
+  difficulty: String
+}
 
-# type Query {
-#   todos: [Todo!]!
-# }
+input NewList {
+  name: String!
+  description: String
+}
 
-# input NewTodo {
-#   text: String!
-#   userId: String!
-# }
+input UpdateList {
+  name: String
+  description: String
+}
 
-# type Mutation {
-#   createTodo(input: NewTodo!): Todo!
-# }
+type Query {
+  # Fetch a question
+  question(id: ID!): Question
+
+  # Fetch all questions
+  questions: [Question!]
+
+  # Fetch a specific list 
+  list(id: ID!): List
+
+  # Fetch all lists
+  lists: [List!]
+}
+
+type Mutation {
+  # Create a question
+  createQuestion(input: NewQuestion!): Question
+
+  # Update a question
+  updateQuestion(id: ID!, input: UpdateQuestion!): Question
+
+  # Create a new list 
+  createList(input: NewList!): List
+
+  # Update a list 
+  updateList(id: ID!, input: UpdateList!): List
+}

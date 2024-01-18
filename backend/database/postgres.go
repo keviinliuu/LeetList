@@ -26,7 +26,7 @@ func NewConnection(config *Config)(*gorm.DB, error) {
 		return db, err
 	}
 
-	fmt.Printf("Successfully connected to database.")
+	fmt.Println("Successfully connected to database.")
 
 	return db, nil
 }

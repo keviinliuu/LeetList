@@ -6,28 +6,49 @@ package graph
 
 import (
 	"context"
-	"crypto/rand"
 	"fmt"
-	"math/big"
 
 	"github.com/keviinliuu/leetlist/graph/model"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	randNumber, _ := rand.Int(rand.Reader, big.NewInt(100))
-	todo := &model.Todo{
-		Text: input.Text,
-		ID: fmt.Sprintf("T%d", randNumber),
-		User: &model.User{ID: input.UserID, Name: "user " + input.UserID},
-	}
-	r.todos = append(r.todos, todo)
-	return todo, nil
+// CreateQuestion is the resolver for the createQuestion field.
+func (r *mutationResolver) CreateQuestion(ctx context.Context, input model.NewQuestion) (*model.Question, error) {
+	panic(fmt.Errorf("not implemented: CreateQuestion - createQuestion"))
 }
 
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	return r.todos, nil
+// UpdateQuestion is the resolver for the updateQuestion field.
+func (r *mutationResolver) UpdateQuestion(ctx context.Context, id string, input model.UpdateQuestion) (*model.Question, error) {
+	panic(fmt.Errorf("not implemented: UpdateQuestion - updateQuestion"))
+}
+
+// CreateList is the resolver for the createList field.
+func (r *mutationResolver) CreateList(ctx context.Context, input model.NewList) (*model.List, error) {
+	panic(fmt.Errorf("not implemented: CreateList - createList"))
+}
+
+// UpdateList is the resolver for the updateList field.
+func (r *mutationResolver) UpdateList(ctx context.Context, id string, input model.UpdateList) (*model.List, error) {
+	panic(fmt.Errorf("not implemented: UpdateList - updateList"))
+}
+
+// Question is the resolver for the question field.
+func (r *queryResolver) Question(ctx context.Context, id string) (*model.Question, error) {
+	panic(fmt.Errorf("not implemented: Question - question"))
+}
+
+// Questions is the resolver for the questions field.
+func (r *queryResolver) Questions(ctx context.Context) ([]*model.Question, error) {
+	panic(fmt.Errorf("not implemented: Questions - questions"))
+}
+
+// List is the resolver for the list field.
+func (r *queryResolver) List(ctx context.Context, id string) (*model.List, error) {
+	panic(fmt.Errorf("not implemented: List - list"))
+}
+
+// Lists is the resolver for the lists field.
+func (r *queryResolver) Lists(ctx context.Context) ([]*model.List, error) {
+	panic(fmt.Errorf("not implemented: Lists - lists"))
 }
 
 // Mutation returns MutationResolver implementation.

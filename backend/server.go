@@ -15,15 +15,9 @@ import (
 const defaultPort = "8080"
 
 func main() {
-	
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
-	}
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = defaultPort
 	}
 
 	dbConfig := &database.Config {
@@ -35,14 +29,25 @@ func main() {
 		SSLMode: os.Getenv("DB_SSLMODE"),
 	}
 	
-	db, err := database.NewConnection(dbConfig)
-	
+	_, err = database.NewConnection(dbConfig)
+
+	if err != nil {
+		log.Fatal("Error connecting to the database: ", err) 
+	}
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
 
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Printf("Starting server on port %s\n...", port)
+	err = http.ListenAndServe(":"+port, nil)
+	if err != nil {
+		log.Fatal("Error starting HTTP server: ", err)
+	}
 }
