@@ -1501,9 +1501,9 @@ func (ec *executionContext) _Question_difficulty(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(model.Difficulty)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNDifficulty2githubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐDifficulty(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Question_difficulty(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1513,7 +1513,7 @@ func (ec *executionContext) fieldContext_Question_difficulty(ctx context.Context
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type Difficulty does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3400,7 +3400,7 @@ func (ec *executionContext) unmarshalInputNewQuestion(ctx context.Context, obj i
 			it.URL = data
 		case "difficulty":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("difficulty"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalNDifficulty2githubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐDifficulty(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3475,7 +3475,7 @@ func (ec *executionContext) unmarshalInputUpdateQuestion(ctx context.Context, ob
 			it.URL = data
 		case "difficulty":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("difficulty"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalODifficulty2ᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐDifficulty(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4129,6 +4129,16 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNDifficulty2githubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐDifficulty(ctx context.Context, v interface{}) (model.Difficulty, error) {
+	var res model.Difficulty
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDifficulty2githubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐDifficulty(ctx context.Context, sel ast.SelectionSet, v model.Difficulty) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalID(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4520,6 +4530,22 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) unmarshalODifficulty2ᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐDifficulty(ctx context.Context, v interface{}) (*model.Difficulty, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.Difficulty)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalODifficulty2ᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐDifficulty(ctx context.Context, sel ast.SelectionSet, v *model.Difficulty) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOList2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐListᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.List) graphql.Marshaler {

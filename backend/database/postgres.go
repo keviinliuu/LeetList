@@ -18,7 +18,7 @@ type Config struct {
 func NewConnection(config *Config)(*gorm.DB, error) {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s password=%s dbname=%s user=%s sslmode=%s", 
-		config.Host, config.Port, config.Password, config.User, config.DBName, config.SSLMode)
+		config.Host, config.Port, config.Password, config.DBName, config.User, config.SSLMode)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 

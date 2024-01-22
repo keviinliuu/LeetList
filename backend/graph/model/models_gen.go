@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
 type List struct {
 	ID          string      `json:"id"`
 	Title       string      `json:"title"`
@@ -18,20 +24,20 @@ type NewList struct {
 }
 
 type NewQuestion struct {
-	Title      string `json:"title"`
-	URL        string `json:"url"`
-	Difficulty string `json:"difficulty"`
+	Title      string     `json:"title"`
+	URL        string     `json:"url"`
+	Difficulty Difficulty `json:"difficulty"`
 }
 
 type Query struct {
 }
 
 type Question struct {
-	ID         string `json:"id"`
-	Title      string `json:"title"`
-	URL        string `json:"url"`
-	Difficulty string `json:"difficulty"`
-	Complete   bool   `json:"complete"`
+	ID         string     `json:"id"`
+	Title      string     `json:"title"`
+	URL        string     `json:"url"`
+	Difficulty Difficulty `json:"difficulty"`
+	Complete   bool       `json:"complete"`
 }
 
 type UpdateList struct {
@@ -40,7 +46,50 @@ type UpdateList struct {
 }
 
 type UpdateQuestion struct {
-	Title      *string `json:"title,omitempty"`
-	URL        *string `json:"url,omitempty"`
-	Difficulty *string `json:"difficulty,omitempty"`
+	Title      *string     `json:"title,omitempty"`
+	URL        *string     `json:"url,omitempty"`
+	Difficulty *Difficulty `json:"difficulty,omitempty"`
+}
+
+type Difficulty string
+
+const (
+	DifficultyEasy      Difficulty = "EASY"
+	DifficultyMedium    Difficulty = "MEDIUM"
+	DifficultyDifficult Difficulty = "DIFFICULT"
+)
+
+var AllDifficulty = []Difficulty{
+	DifficultyEasy,
+	DifficultyMedium,
+	DifficultyDifficult,
+}
+
+func (e Difficulty) IsValid() bool {
+	switch e {
+	case DifficultyEasy, DifficultyMedium, DifficultyDifficult:
+		return true
+	}
+	return false
+}
+
+func (e Difficulty) String() string {
+	return string(e)
+}
+
+func (e *Difficulty) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Difficulty(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Difficulty", str)
+	}
+	return nil
+}
+
+func (e Difficulty) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/keviinliuu/leetlist/database"
 	"github.com/keviinliuu/leetlist/graph"
+	// "github.com/keviinliuu/leetlist/util"
 )
 
 const defaultPort = "8080"
@@ -45,7 +46,7 @@ func main() {
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
 
-	log.Printf("Starting server on port %s\n...", port)
+	log.Printf("Starting server on port %s\n", port)
 	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatal("Error starting HTTP server: ", err)

@@ -1,13 +1,14 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
-
+enum Difficulty {
+  EASY
+  MEDIUM
+  DIFFICULT
+}
 
 type Question {
   id: ID!
   title: String!
   url: String!
-  difficulty: String!
+  difficulty: Difficulty!
   complete: Boolean!
 }
 
@@ -21,13 +22,13 @@ type List {
 input NewQuestion {
   title: String!
   url: String!
-  difficulty: String!
+  difficulty: Difficulty!
 }
 
 input UpdateQuestion {
   title: String
   url: String
-  difficulty: String
+  difficulty: Difficulty
 }
 
 input NewList {
