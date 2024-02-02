@@ -9,7 +9,7 @@ import (
 )
 
 type List struct {
-	ID          string      `json:"id"`
+	ID          string      `json:"ID"`
 	Title       string      `json:"title"`
 	Description *string     `json:"description,omitempty"`
 	Entries     []*Question `json:"entries"`
@@ -33,7 +33,7 @@ type Query struct {
 }
 
 type Question struct {
-	ID         string     `json:"_id"`
+	ID         string     `gorm:"type:uuid;primary_key"`
 	Title      string     `json:"title"`
 	URL        string     `json:"url"`
 	Difficulty Difficulty `json:"difficulty"`

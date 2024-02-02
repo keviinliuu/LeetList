@@ -5,7 +5,7 @@ enum Difficulty {
 }
 
 type Question {
-  _id: ID!
+  ID: ID!
   title: String!
   url: String!
   difficulty: Difficulty!
@@ -13,7 +13,7 @@ type Question {
 }
 
 type List {
-  id: ID!
+  ID: ID!
   title: String!
   description: String
   entries: [Question!]!

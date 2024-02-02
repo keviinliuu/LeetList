@@ -123,7 +123,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.List.Entries(childComplexity), true
 
-	case "List.id":
+	case "List.ID":
 		if e.complexity.List.ID == nil {
 			break
 		}
@@ -237,7 +237,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Question.Difficulty(childComplexity), true
 
-	case "Question._id":
+	case "Question.ID":
 		if e.complexity.Question.ID == nil {
 			break
 		}
@@ -547,8 +547,8 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _List_id(ctx context.Context, field graphql.CollectedField, obj *model.List) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_List_id(ctx, field)
+func (ec *executionContext) _List_ID(ctx context.Context, field graphql.CollectedField, obj *model.List) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_List_ID(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -578,7 +578,7 @@ func (ec *executionContext) _List_id(ctx context.Context, field graphql.Collecte
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_List_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_List_ID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "List",
 		Field:      field,
@@ -715,8 +715,8 @@ func (ec *executionContext) fieldContext_List_entries(ctx context.Context, field
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "_id":
-				return ec.fieldContext_Question__id(ctx, field)
+			case "ID":
+				return ec.fieldContext_Question_ID(ctx, field)
 			case "title":
 				return ec.fieldContext_Question_title(ctx, field)
 			case "url":
@@ -768,8 +768,8 @@ func (ec *executionContext) fieldContext_Mutation_createQuestion(ctx context.Con
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "_id":
-				return ec.fieldContext_Question__id(ctx, field)
+			case "ID":
+				return ec.fieldContext_Question_ID(ctx, field)
 			case "title":
 				return ec.fieldContext_Question_title(ctx, field)
 			case "url":
@@ -832,8 +832,8 @@ func (ec *executionContext) fieldContext_Mutation_updateQuestion(ctx context.Con
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "_id":
-				return ec.fieldContext_Question__id(ctx, field)
+			case "ID":
+				return ec.fieldContext_Question_ID(ctx, field)
 			case "title":
 				return ec.fieldContext_Question_title(ctx, field)
 			case "url":
@@ -896,8 +896,8 @@ func (ec *executionContext) fieldContext_Mutation_createList(ctx context.Context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_List_id(ctx, field)
+			case "ID":
+				return ec.fieldContext_List_ID(ctx, field)
 			case "title":
 				return ec.fieldContext_List_title(ctx, field)
 			case "description":
@@ -958,8 +958,8 @@ func (ec *executionContext) fieldContext_Mutation_updateList(ctx context.Context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_List_id(ctx, field)
+			case "ID":
+				return ec.fieldContext_List_ID(ctx, field)
 			case "title":
 				return ec.fieldContext_List_title(ctx, field)
 			case "description":
@@ -1020,8 +1020,8 @@ func (ec *executionContext) fieldContext_Query_question(ctx context.Context, fie
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "_id":
-				return ec.fieldContext_Question__id(ctx, field)
+			case "ID":
+				return ec.fieldContext_Question_ID(ctx, field)
 			case "title":
 				return ec.fieldContext_Question_title(ctx, field)
 			case "url":
@@ -1084,8 +1084,8 @@ func (ec *executionContext) fieldContext_Query_questions(ctx context.Context, fi
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "_id":
-				return ec.fieldContext_Question__id(ctx, field)
+			case "ID":
+				return ec.fieldContext_Question_ID(ctx, field)
 			case "title":
 				return ec.fieldContext_Question_title(ctx, field)
 			case "url":
@@ -1137,8 +1137,8 @@ func (ec *executionContext) fieldContext_Query_list(ctx context.Context, field g
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_List_id(ctx, field)
+			case "ID":
+				return ec.fieldContext_List_ID(ctx, field)
 			case "title":
 				return ec.fieldContext_List_title(ctx, field)
 			case "description":
@@ -1199,8 +1199,8 @@ func (ec *executionContext) fieldContext_Query_lists(ctx context.Context, field 
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_List_id(ctx, field)
+			case "ID":
+				return ec.fieldContext_List_ID(ctx, field)
 			case "title":
 				return ec.fieldContext_List_title(ctx, field)
 			case "description":
@@ -1343,8 +1343,8 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Question__id(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Question__id(ctx, field)
+func (ec *executionContext) _Question_ID(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Question_ID(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1374,7 +1374,7 @@ func (ec *executionContext) _Question__id(ctx context.Context, field graphql.Col
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Question__id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Question_ID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Question",
 		Field:      field,
@@ -3505,8 +3505,8 @@ func (ec *executionContext) _List(ctx context.Context, sel ast.SelectionSet, obj
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("List")
-		case "id":
-			out.Values[i] = ec._List_id(ctx, field, obj)
+		case "ID":
+			out.Values[i] = ec._List_ID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -3740,8 +3740,8 @@ func (ec *executionContext) _Question(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Question")
-		case "_id":
-			out.Values[i] = ec._Question__id(ctx, field, obj)
+		case "ID":
+			out.Values[i] = ec._Question_ID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
