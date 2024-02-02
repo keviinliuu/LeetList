@@ -33,7 +33,7 @@ type Query struct {
 }
 
 type Question struct {
-	ID         string     `json:"id"`
+	ID         string     `json:"_id"`
 	Title      string     `json:"title"`
 	URL        string     `json:"url"`
 	Difficulty Difficulty `json:"difficulty"`
@@ -54,20 +54,20 @@ type UpdateQuestion struct {
 type Difficulty string
 
 const (
-	DifficultyEasy      Difficulty = "EASY"
-	DifficultyMedium    Difficulty = "MEDIUM"
-	DifficultyDifficult Difficulty = "DIFFICULT"
+	DifficultyEasy   Difficulty = "EASY"
+	DifficultyMedium Difficulty = "MEDIUM"
+	DifficultyHard   Difficulty = "HARD"
 )
 
 var AllDifficulty = []Difficulty{
 	DifficultyEasy,
 	DifficultyMedium,
-	DifficultyDifficult,
+	DifficultyHard,
 }
 
 func (e Difficulty) IsValid() bool {
 	switch e {
-	case DifficultyEasy, DifficultyMedium, DifficultyDifficult:
+	case DifficultyEasy, DifficultyMedium, DifficultyHard:
 		return true
 	}
 	return false

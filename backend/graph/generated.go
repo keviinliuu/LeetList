@@ -237,7 +237,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Question.Difficulty(childComplexity), true
 
-	case "Question.id":
+	case "Question._id":
 		if e.complexity.Question.ID == nil {
 			break
 		}
@@ -715,8 +715,8 @@ func (ec *executionContext) fieldContext_List_entries(ctx context.Context, field
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Question_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Question__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Question_title(ctx, field)
 			case "url":
@@ -768,8 +768,8 @@ func (ec *executionContext) fieldContext_Mutation_createQuestion(ctx context.Con
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Question_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Question__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Question_title(ctx, field)
 			case "url":
@@ -832,8 +832,8 @@ func (ec *executionContext) fieldContext_Mutation_updateQuestion(ctx context.Con
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Question_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Question__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Question_title(ctx, field)
 			case "url":
@@ -1020,8 +1020,8 @@ func (ec *executionContext) fieldContext_Query_question(ctx context.Context, fie
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Question_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Question__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Question_title(ctx, field)
 			case "url":
@@ -1084,8 +1084,8 @@ func (ec *executionContext) fieldContext_Query_questions(ctx context.Context, fi
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Question_id(ctx, field)
+			case "_id":
+				return ec.fieldContext_Question__id(ctx, field)
 			case "title":
 				return ec.fieldContext_Question_title(ctx, field)
 			case "url":
@@ -1343,8 +1343,8 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Question_id(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Question_id(ctx, field)
+func (ec *executionContext) _Question__id(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Question__id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1374,7 +1374,7 @@ func (ec *executionContext) _Question_id(ctx context.Context, field graphql.Coll
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Question_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Question__id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Question",
 		Field:      field,
@@ -3740,8 +3740,8 @@ func (ec *executionContext) _Question(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Question")
-		case "id":
-			out.Values[i] = ec._Question_id(ctx, field, obj)
+		case "_id":
+			out.Values[i] = ec._Question__id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

@@ -7,13 +7,27 @@ package graph
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/keviinliuu/leetlist/graph/model"
 )
 
 // CreateQuestion is the resolver for the createQuestion field.
 func (r *mutationResolver) CreateQuestion(ctx context.Context, input model.NewQuestion) (*model.Question, error) {
-	panic(fmt.Errorf("not implemented: CreateQuestion - createQuestion"))
+	question := model.Question{
+		Title:      input.Title,
+		URL:        input.URL,
+		Difficulty: input.Difficulty,
+		Complete:   false,
+	}
+
+	result := r.DB.Create(&question)
+	if result.Error != nil {
+		log.Fatal(result.Error)
+		return nil, result.Error
+	}
+
+	return &question, nil
 }
 
 // UpdateQuestion is the resolver for the updateQuestion field.

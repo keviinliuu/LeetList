@@ -10,7 +10,6 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/keviinliuu/leetlist/database"
 	"github.com/keviinliuu/leetlist/graph"
-	// "github.com/keviinliuu/leetlist/util"
 )
 
 const defaultPort = "8080"
@@ -30,10 +29,15 @@ func main() {
 		SSLMode: os.Getenv("DB_SSLMODE"),
 	}
 	
-	_, err = database.NewConnection(dbConfig)
-
+	db, err := database.NewConnection(dbConfig)
 	if err != nil {
 		log.Fatal("Error connecting to the database: ", err) 
+	}
+
+	database.AutoMigrate(db)
+
+	resolver := &graph.Resolver{
+		DB: db,
 	}
 
 	port := os.Getenv("PORT")
@@ -41,7 +45,7 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)

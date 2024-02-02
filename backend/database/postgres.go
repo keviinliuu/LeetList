@@ -2,6 +2,9 @@ package database
 
 import (
 	"fmt"
+	"log"
+
+	"github.com/keviinliuu/leetlist/graph/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -29,4 +32,11 @@ func NewConnection(config *Config)(*gorm.DB, error) {
 	fmt.Println("Successfully connected to database.")
 
 	return db, nil
+}
+
+func AutoMigrate(db *gorm.DB) {
+	err := db.AutoMigrate(&model.Question{})
+	if err != nil {
+		log.Fatalf("Failed to auto migrate: %v", err)
+	}
 }

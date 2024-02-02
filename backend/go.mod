@@ -6,7 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.17.42
 	github.com/playwright-community/playwright-go v0.4001.0
 	github.com/vektah/gqlparser/v2 v2.5.10
-	gorm.io/gorm v1.25.5
+	gorm.io/gorm v1.25.6
 )
 
 require (

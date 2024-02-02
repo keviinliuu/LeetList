@@ -1,11 +1,11 @@
 enum Difficulty {
   EASY
   MEDIUM
-  DIFFICULT
+  HARD
 }
 
 type Question {
-  id: ID!
+  _id: ID!
   title: String!
   url: String!
   difficulty: Difficulty!
