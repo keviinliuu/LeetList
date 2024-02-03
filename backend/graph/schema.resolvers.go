@@ -21,10 +21,10 @@ func (r *mutationResolver) CreateQuestion(ctx context.Context, input model.NewQu
 		Complete:   false,
 	}
 
-	result := r.DB.Create(&question)
-	if result.Error != nil {
-		log.Fatal(result.Error)
-		return nil, result.Error
+	err := r.DB.Create(&question).Error
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
 	}
 
 	return &question, nil
@@ -32,7 +32,30 @@ func (r *mutationResolver) CreateQuestion(ctx context.Context, input model.NewQu
 
 // UpdateQuestion is the resolver for the updateQuestion field.
 func (r *mutationResolver) UpdateQuestion(ctx context.Context, id string, input model.UpdateQuestion) (*model.Question, error) {
-	panic(fmt.Errorf("not implemented: UpdateQuestion - updateQuestion"))
+	var question model.Question 
+
+	err := r.DB.First(&question, "id = ?", id).Error
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	if input.Title != nil {
+		question.Title = *input.Title 
+	}
+	if input.URL != nil {
+		question.URL = *input.URL 
+	}
+	if input.Difficulty != nil {
+		question.Difficulty = *input.Difficulty
+	}
+
+	err = r.DB.Save(&question).Error
+	if err != nil {
+		return nil, err 
+	}
+
+	return &question, nil
 }
 
 // CreateList is the resolver for the createList field.
@@ -47,12 +70,28 @@ func (r *mutationResolver) UpdateList(ctx context.Context, id string, input mode
 
 // Question is the resolver for the question field.
 func (r *queryResolver) Question(ctx context.Context, id string) (*model.Question, error) {
-	panic(fmt.Errorf("not implemented: Question - question"))
+	var question model.Question
+
+	err := r.DB.First(&question, "id = ?", id).Error
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	return &question, nil
 }
 
 // Questions is the resolver for the questions field.
 func (r *queryResolver) Questions(ctx context.Context) ([]*model.Question, error) {
-	panic(fmt.Errorf("not implemented: Questions - questions"))
+	var questions []*model.Question 
+
+	err := r.DB.Find(&questions).Error
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	return questions, nil
 }
 
 // List is the resolver for the list field.
