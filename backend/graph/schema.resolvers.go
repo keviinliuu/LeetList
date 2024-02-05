@@ -6,8 +6,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"github.com/keviinliuu/leetlist/graph/model"
 )
@@ -23,7 +21,6 @@ func (r *mutationResolver) CreateQuestion(ctx context.Context, input model.NewQu
 
 	err := r.DB.Create(&question).Error
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 
@@ -32,19 +29,18 @@ func (r *mutationResolver) CreateQuestion(ctx context.Context, input model.NewQu
 
 // UpdateQuestion is the resolver for the updateQuestion field.
 func (r *mutationResolver) UpdateQuestion(ctx context.Context, id string, input model.UpdateQuestion) (*model.Question, error) {
-	var question model.Question 
+	var question model.Question
 
 	err := r.DB.First(&question, "id = ?", id).Error
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 
 	if input.Title != nil {
-		question.Title = *input.Title 
+		question.Title = *input.Title
 	}
 	if input.URL != nil {
-		question.URL = *input.URL 
+		question.URL = *input.URL
 	}
 	if input.Difficulty != nil {
 		question.Difficulty = *input.Difficulty
@@ -52,7 +48,7 @@ func (r *mutationResolver) UpdateQuestion(ctx context.Context, id string, input 
 
 	err = r.DB.Save(&question).Error
 	if err != nil {
-		return nil, err 
+		return nil, err
 	}
 
 	return &question, nil
@@ -60,12 +56,83 @@ func (r *mutationResolver) UpdateQuestion(ctx context.Context, id string, input 
 
 // CreateList is the resolver for the createList field.
 func (r *mutationResolver) CreateList(ctx context.Context, input model.NewList) (*model.List, error) {
-	panic(fmt.Errorf("not implemented: CreateList - createList"))
+	list := model.List{
+		Title:       input.Title,
+		Description: input.Description,
+	}
+
+	entries := []*model.Question{}
+
+	for _, qInput := range input.Entries {
+		if qInput == nil {
+			continue
+		}
+
+		question, err := r.CreateQuestion(ctx, *qInput)
+		if err != nil {
+			return nil, err
+		}
+		entries = append(entries, question)
+	}
+
+	list.Entries = entries
+
+	err := r.DB.Create(&list).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &list, err
 }
 
 // UpdateList is the resolver for the updateList field.
 func (r *mutationResolver) UpdateList(ctx context.Context, id string, input model.UpdateList) (*model.List, error) {
-	panic(fmt.Errorf("not implemented: UpdateList - updateList"))
+	var list model.List 
+
+	err := r.DB.Preload("Entries").First(&list, "id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+
+	if input.Title != nil {
+		list.Title = *input.Title 
+	}
+	if input.Description != nil {
+		list.Description = input.Description 
+	}
+
+	for _, qInput := range input.AddQuestions {
+		if qInput == nil {
+			continue
+		}
+
+		question, err := r.CreateQuestion(ctx, *qInput)
+		if err != nil {
+			return nil, err 
+		}
+		list.Entries = append(list.Entries, question)
+	}
+
+	for _, qID := range input.RemoveQuestionIds {
+		err := r.DB.Model(&list).Association("Entries").Delete(&model.Question{ID: qID})
+		if err != nil {
+			return nil, err
+		} 
+		
+		var question model.Question 
+
+		err = r.DB.Where("id = ?", qID).Delete(&question).Error
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	err = r.DB.Save(&list).Error 
+	if err != nil {
+		return nil, err
+	}
+
+	return &list, nil
 }
 
 // Question is the resolver for the question field.
@@ -74,7 +141,6 @@ func (r *queryResolver) Question(ctx context.Context, id string) (*model.Questio
 
 	err := r.DB.First(&question, "id = ?", id).Error
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 
@@ -83,11 +149,10 @@ func (r *queryResolver) Question(ctx context.Context, id string) (*model.Questio
 
 // Questions is the resolver for the questions field.
 func (r *queryResolver) Questions(ctx context.Context) ([]*model.Question, error) {
-	var questions []*model.Question 
+	var questions []*model.Question
 
 	err := r.DB.Find(&questions).Error
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 
@@ -96,12 +161,26 @@ func (r *queryResolver) Questions(ctx context.Context) ([]*model.Question, error
 
 // List is the resolver for the list field.
 func (r *queryResolver) List(ctx context.Context, id string) (*model.List, error) {
-	panic(fmt.Errorf("not implemented: List - list"))
+	var list model.List
+
+	err := r.DB.Preload("Entries").First(&list, "id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &list, nil
 }
 
 // Lists is the resolver for the lists field.
 func (r *queryResolver) Lists(ctx context.Context) ([]*model.List, error) {
-	panic(fmt.Errorf("not implemented: Lists - lists"))
+	var lists []*model.List 
+
+	err := r.DB.Preload("Entries").Find(&lists).Error 
+	if err != nil {
+		return nil, err
+	}
+
+	return lists, nil
 }
 
 // Mutation returns MutationResolver implementation.

@@ -32,13 +32,16 @@ input UpdateQuestion {
 }
 
 input NewList {
-  name: String!
+  title: String!
   description: String
+  entries: [NewQuestion!]!
 }
 
 input UpdateList {
-  name: String
+  title: String
   description: String
+  addQuestions: [NewQuestion!]
+  removeQuestionIds: [ID!]
 }
 
 type Query {

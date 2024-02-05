@@ -12,15 +12,16 @@ type List struct {
 	ID          string      `json:"ID"`
 	Title       string      `json:"title"`
 	Description *string     `json:"description,omitempty"`
-	Entries     []*Question `json:"entries"`
+	Entries     []*Question `gorm:"many2many:list_questions;"`
 }
 
 type Mutation struct {
 }
 
 type NewList struct {
-	Name        string  `json:"name"`
-	Description *string `json:"description,omitempty"`
+	Title       string         `json:"title"`
+	Description *string        `json:"description,omitempty"`
+	Entries     []*NewQuestion `json:"entries"`
 }
 
 type NewQuestion struct {
@@ -33,7 +34,7 @@ type Query struct {
 }
 
 type Question struct {
-	ID         string     `gorm:"type:uuid;primary_key"`
+	ID         string     `json:"ID"`
 	Title      string     `json:"title"`
 	URL        string     `json:"url"`
 	Difficulty Difficulty `json:"difficulty"`
@@ -41,8 +42,10 @@ type Question struct {
 }
 
 type UpdateList struct {
-	Name        *string `json:"name,omitempty"`
-	Description *string `json:"description,omitempty"`
+	Title             *string        `json:"title,omitempty"`
+	Description       *string        `json:"description,omitempty"`
+	AddQuestions      []*NewQuestion `json:"addQuestions,omitempty"`
+	RemoveQuestionIds []string       `json:"removeQuestionIds,omitempty"`
 }
 
 type UpdateQuestion struct {

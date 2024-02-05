@@ -39,4 +39,9 @@ func AutoMigrate(db *gorm.DB) {
 	if err != nil {
 		log.Fatalf("Failed to auto migrate: %v", err)
 	}
+
+	err = db.AutoMigrate(&model.List{})
+	if err != nil {
+		log.Fatalf("Failed to auto migrate: %v", err)
+	}
 }

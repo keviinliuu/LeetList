@@ -3343,20 +3343,20 @@ func (ec *executionContext) unmarshalInputNewList(ctx context.Context, obj inter
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "description"}
+	fieldsInOrder := [...]string{"title", "description", "entries"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
 			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Name = data
+			it.Title = data
 		case "description":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -3364,6 +3364,13 @@ func (ec *executionContext) unmarshalInputNewList(ctx context.Context, obj inter
 				return it, err
 			}
 			it.Description = data
+		case "entries":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("entries"))
+			data, err := ec.unmarshalNNewQuestion2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestionᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Entries = data
 		}
 	}
 
@@ -3418,20 +3425,20 @@ func (ec *executionContext) unmarshalInputUpdateList(ctx context.Context, obj in
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "description"}
+	fieldsInOrder := [...]string{"title", "description", "addQuestions", "removeQuestionIds"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Name = data
+			it.Title = data
 		case "description":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -3439,6 +3446,20 @@ func (ec *executionContext) unmarshalInputUpdateList(ctx context.Context, obj in
 				return it, err
 			}
 			it.Description = data
+		case "addQuestions":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addQuestions"))
+			data, err := ec.unmarshalONewQuestion2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestionᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AddQuestions = data
+		case "removeQuestionIds":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("removeQuestionIds"))
+			data, err := ec.unmarshalOID2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RemoveQuestionIds = data
 		}
 	}
 
@@ -4174,6 +4195,28 @@ func (ec *executionContext) unmarshalNNewQuestion2githubᚗcomᚋkeviinliuuᚋle
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNNewQuestion2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestionᚄ(ctx context.Context, v interface{}) ([]*model.NewQuestion, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*model.NewQuestion, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNNewQuestion2ᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestion(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNNewQuestion2ᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestion(ctx context.Context, v interface{}) (*model.NewQuestion, error) {
+	res, err := ec.unmarshalInputNewQuestion(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNQuestion2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐQuestionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Question) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -4548,6 +4591,44 @@ func (ec *executionContext) marshalODifficulty2ᚖgithubᚗcomᚋkeviinliuuᚋle
 	return v
 }
 
+func (ec *executionContext) unmarshalOID2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNID2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOID2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNID2string(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalOList2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐListᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.List) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -4600,6 +4681,26 @@ func (ec *executionContext) marshalOList2ᚖgithubᚗcomᚋkeviinliuuᚋleetlist
 		return graphql.Null
 	}
 	return ec._List(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalONewQuestion2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestionᚄ(ctx context.Context, v interface{}) ([]*model.NewQuestion, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*model.NewQuestion, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNNewQuestion2ᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestion(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
 }
 
 func (ec *executionContext) marshalOQuestion2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐQuestionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Question) graphql.Marshaler {
