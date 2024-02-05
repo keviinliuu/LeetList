@@ -41,6 +41,11 @@ type Question struct {
 	Complete   bool       `json:"complete"`
 }
 
+type QuestionInfo struct {
+	Title      string `json:"title"`
+	Difficulty string `json:"difficulty"`
+}
+
 type UpdateList struct {
 	Title             *string        `json:"title,omitempty"`
 	Description       *string        `json:"description,omitempty"`

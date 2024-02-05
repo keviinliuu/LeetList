@@ -8,6 +8,7 @@ import (
 	"context"
 
 	"github.com/keviinliuu/leetlist/graph/model"
+	"github.com/keviinliuu/leetlist/util"
 )
 
 // CreateQuestion is the resolver for the createQuestion field.
@@ -87,7 +88,7 @@ func (r *mutationResolver) CreateList(ctx context.Context, input model.NewList) 
 
 // UpdateList is the resolver for the updateList field.
 func (r *mutationResolver) UpdateList(ctx context.Context, id string, input model.UpdateList) (*model.List, error) {
-	var list model.List 
+	var list model.List
 
 	err := r.DB.Preload("Entries").First(&list, "id = ?", id).Error
 	if err != nil {
@@ -95,10 +96,10 @@ func (r *mutationResolver) UpdateList(ctx context.Context, id string, input mode
 	}
 
 	if input.Title != nil {
-		list.Title = *input.Title 
+		list.Title = *input.Title
 	}
 	if input.Description != nil {
-		list.Description = input.Description 
+		list.Description = input.Description
 	}
 
 	for _, qInput := range input.AddQuestions {
@@ -108,7 +109,7 @@ func (r *mutationResolver) UpdateList(ctx context.Context, id string, input mode
 
 		question, err := r.CreateQuestion(ctx, *qInput)
 		if err != nil {
-			return nil, err 
+			return nil, err
 		}
 		list.Entries = append(list.Entries, question)
 	}
@@ -117,9 +118,9 @@ func (r *mutationResolver) UpdateList(ctx context.Context, id string, input mode
 		err := r.DB.Model(&list).Association("Entries").Delete(&model.Question{ID: qID})
 		if err != nil {
 			return nil, err
-		} 
-		
-		var question model.Question 
+		}
+
+		var question model.Question
 
 		err = r.DB.Where("id = ?", qID).Delete(&question).Error
 		if err != nil {
@@ -127,7 +128,7 @@ func (r *mutationResolver) UpdateList(ctx context.Context, id string, input mode
 		}
 	}
 
-	err = r.DB.Save(&list).Error 
+	err = r.DB.Save(&list).Error
 	if err != nil {
 		return nil, err
 	}
@@ -173,14 +174,24 @@ func (r *queryResolver) List(ctx context.Context, id string) (*model.List, error
 
 // Lists is the resolver for the lists field.
 func (r *queryResolver) Lists(ctx context.Context) ([]*model.List, error) {
-	var lists []*model.List 
+	var lists []*model.List
 
-	err := r.DB.Preload("Entries").Find(&lists).Error 
+	err := r.DB.Preload("Entries").Find(&lists).Error
 	if err != nil {
 		return nil, err
 	}
 
 	return lists, nil
+}
+
+// ScrapeQuestion is the resolver for the scrapeQuestion field.
+func (r *queryResolver) ScrapeQuestion(ctx context.Context, url string) (*model.QuestionInfo, error) {
+	title, difficulty := util.GetQuestionInfo(url)
+
+	return &model.QuestionInfo{
+		Title:      title,
+		Difficulty: difficulty,
+	}, nil
 }
 
 // Mutation returns MutationResolver implementation.
