@@ -57,6 +57,8 @@ type ComplexityRoot struct {
 	Mutation struct {
 		CreateList     func(childComplexity int, input model.NewList) int
 		CreateQuestion func(childComplexity int, input model.NewQuestion) int
+		DeleteList     func(childComplexity int, id string) int
+		DeleteQuestion func(childComplexity int, id string) int
 		UpdateList     func(childComplexity int, id string, input model.UpdateList) int
 		UpdateQuestion func(childComplexity int, id string, input model.UpdateQuestion) int
 	}
@@ -88,6 +90,8 @@ type MutationResolver interface {
 	UpdateQuestion(ctx context.Context, id string, input model.UpdateQuestion) (*model.Question, error)
 	CreateList(ctx context.Context, input model.NewList) (*model.List, error)
 	UpdateList(ctx context.Context, id string, input model.UpdateList) (*model.List, error)
+	DeleteQuestion(ctx context.Context, id string) (*model.Question, error)
+	DeleteList(ctx context.Context, id string) (*model.List, error)
 }
 type QueryResolver interface {
 	Question(ctx context.Context, id string) (*model.Question, error)
@@ -167,6 +171,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateQuestion(childComplexity, args["input"].(model.NewQuestion)), true
+
+	case "Mutation.deleteList":
+		if e.complexity.Mutation.DeleteList == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteList_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteList(childComplexity, args["id"].(string)), true
+
+	case "Mutation.deleteQuestion":
+		if e.complexity.Mutation.DeleteQuestion == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteQuestion_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteQuestion(childComplexity, args["id"].(string)), true
 
 	case "Mutation.updateList":
 		if e.complexity.Mutation.UpdateList == nil {
@@ -446,6 +474,36 @@ func (ec *executionContext) field_Mutation_createQuestion_args(ctx context.Conte
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteList_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteQuestion_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -1026,6 +1084,132 @@ func (ec *executionContext) fieldContext_Mutation_updateList(ctx context.Context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateList_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteQuestion(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteQuestion(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteQuestion(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Question)
+	fc.Result = res
+	return ec.marshalOQuestion2ᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteQuestion(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "ID":
+				return ec.fieldContext_Question_ID(ctx, field)
+			case "title":
+				return ec.fieldContext_Question_title(ctx, field)
+			case "url":
+				return ec.fieldContext_Question_url(ctx, field)
+			case "difficulty":
+				return ec.fieldContext_Question_difficulty(ctx, field)
+			case "complete":
+				return ec.fieldContext_Question_complete(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Question", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteQuestion_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteList(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteList(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteList(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.List)
+	fc.Result = res
+	return ec.marshalOList2ᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐList(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteList(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "ID":
+				return ec.fieldContext_List_ID(ctx, field)
+			case "title":
+				return ec.fieldContext_List_title(ctx, field)
+			case "description":
+				return ec.fieldContext_List_description(ctx, field)
+			case "entries":
+				return ec.fieldContext_List_entries(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type List", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteList_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -3794,6 +3978,14 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "updateList":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateList(ctx, field)
+			})
+		case "deleteQuestion":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteQuestion(ctx, field)
+			})
+		case "deleteList":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteList(ctx, field)
 			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))

@@ -6,6 +6,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/keviinliuu/leetlist/graph/model"
 	"github.com/keviinliuu/leetlist/util"
@@ -131,6 +132,40 @@ func (r *mutationResolver) UpdateList(ctx context.Context, id string, input mode
 	err = r.DB.Save(&list).Error
 	if err != nil {
 		return nil, err
+	}
+
+	return &list, nil
+}
+
+// DeleteQuestion is the resolver for the deleteQuestion field.
+func (r *mutationResolver) DeleteQuestion(ctx context.Context, id string) (*model.Question, error) {
+	var question model.Question 
+
+	err := r.DB.First(&question, "id = ?", id).Error 
+	if err != nil {
+		return nil, fmt.Errorf("Question not found: %v", err) 
+	}
+
+	err = r.DB.Delete(&question).Error 
+	if err != nil {
+		return nil, fmt.Errorf("Failed to delete question: %v", err)
+	}
+
+	return &question, nil
+}
+
+// DeleteList is the resolver for the deleteList field.
+func (r *mutationResolver) DeleteList(ctx context.Context, id string) (*model.List, error) {
+	var list model.List 
+
+	err := r.DB.Preload("Entries").First(&list, "id = ?", id).Error 
+	if err != nil {
+		return nil, fmt.Errorf("List not found: %v", err )
+	}
+
+	err = r.DB.Delete(&list).Error 
+	if err != nil {
+		return nil, fmt.Errorf("Failed to delete list: %v", err)
 	}
 
 	return &list, nil

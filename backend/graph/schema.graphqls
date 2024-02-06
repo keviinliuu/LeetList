@@ -78,4 +78,10 @@ type Mutation {
 
   # Update a list 
   updateList(id: ID!, input: UpdateList!): List
+
+  # Delete a question
+  deleteQuestion(id: ID!): Question 
+
+  # Delete a list 
+  deleteList(id: ID!): List
 }

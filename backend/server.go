@@ -62,5 +62,4 @@ func main() {
 }
 
 // todo
-// - add deletion support for lists and questions
 // - implement user creation and auth
