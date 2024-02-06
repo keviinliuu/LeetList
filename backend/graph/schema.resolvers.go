@@ -186,7 +186,7 @@ func (r *queryResolver) Lists(ctx context.Context) ([]*model.List, error) {
 
 // ScrapeQuestion is the resolver for the scrapeQuestion field.
 func (r *queryResolver) ScrapeQuestion(ctx context.Context, url string) (*model.QuestionInfo, error) {
-	title, difficulty := util.GetQuestionInfo(url)
+	title, difficulty := util.GetQuestionInfo(url, r.Browser)
 
 	return &model.QuestionInfo{
 		Title:      title,

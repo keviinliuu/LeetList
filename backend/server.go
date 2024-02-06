@@ -5,11 +5,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/joho/godotenv"
 	"github.com/keviinliuu/leetlist/database"
 	"github.com/keviinliuu/leetlist/graph"
+	"github.com/keviinliuu/leetlist/util"
 )
 
 const defaultPort = "8080"
@@ -36,8 +37,11 @@ func main() {
 
 	database.AutoMigrate(db)
 
+	browser := util.InitBrowser()
+
 	resolver := &graph.Resolver{
 		DB: db,
+		Browser: browser,
 	}
 
 	port := os.Getenv("PORT")
@@ -56,3 +60,7 @@ func main() {
 		log.Fatal("Error starting HTTP server: ", err)
 	}
 }
+
+// todo
+// - add deletion support for lists and questions
+// - implement user creation and auth

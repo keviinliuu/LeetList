@@ -1,25 +1,41 @@
 package util
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
 	"github.com/playwright-community/playwright-go"
 )
 
-func GetQuestionInfo(url string) (title string, difficulty string) {
-    pw, err := playwright.Run()
+func InitBrowser() (browser playwright.Browser){
+	var err error
+	pw, err := playwright.Run()
 	if err != nil {
 		log.Fatalf("Could not start Playwright: %v", err)
 	}
-	browser, err := pw.Chromium.Launch() 
+	browser, err = pw.Firefox.Launch(playwright.BrowserTypeLaunchOptions{
+		Headless: playwright.Bool(true),
+	})
 	if err != nil {
 		log.Fatalf("Could not launch browser: %v", err)
 	}
-	page, err := browser.NewPage() 
+
+	fmt.Println("Successfully started webscraper.")
+
+	return browser
+}
+
+
+func GetQuestionInfo(url string, browser playwright.Browser) (title string, difficulty string) {
+	page, err := browser.NewPage(playwright.BrowserNewPageOptions{
+		BypassCSP: playwright.Bool(true),
+	}) 
 	if err != nil {
 		log.Fatalf("Could not create page: %v", err)
 	}
+	defer page.Close()
+
 	if _, err = page.Goto(url); err != nil {
 		log.Fatalf("Could not goto: %v", err)
 	}
