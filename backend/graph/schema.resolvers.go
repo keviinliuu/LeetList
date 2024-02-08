@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/keviinliuu/leetlist/graph/model"
 	"github.com/keviinliuu/leetlist/util"
 )
@@ -15,6 +16,7 @@ import (
 // CreateQuestion is the resolver for the createQuestion field.
 func (r *mutationResolver) CreateQuestion(ctx context.Context, input model.NewQuestion) (*model.Question, error) {
 	question := model.Question{
+		ID:			uuid.New().String(),
 		Title:      input.Title,
 		URL:        input.URL,
 		Difficulty: input.Difficulty,
@@ -59,6 +61,7 @@ func (r *mutationResolver) UpdateQuestion(ctx context.Context, id string, input 
 // CreateList is the resolver for the createList field.
 func (r *mutationResolver) CreateList(ctx context.Context, input model.NewList) (*model.List, error) {
 	list := model.List{
+		ID:			 uuid.New().String(),
 		Title:       input.Title,
 		Description: input.Description,
 	}
@@ -146,12 +149,16 @@ func (r *mutationResolver) DeleteQuestion(ctx context.Context, id string) (*mode
 		return nil, fmt.Errorf("Question not found: %v", err) 
 	}
 
+	if err := r.DB.Exec("DELETE FROM list_questions WHERE question_id = ?", id).Error; err != nil {
+        return nil, fmt.Errorf("Failed to disassociate question from lists: %v", err)
+    }
+
 	err = r.DB.Delete(&question).Error 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to delete question: %v", err)
 	}
 
-	return &question, nil
+	return nil, nil
 }
 
 // DeleteList is the resolver for the deleteList field.
@@ -160,7 +167,14 @@ func (r *mutationResolver) DeleteList(ctx context.Context, id string) (*model.Li
 
 	err := r.DB.Preload("Entries").First(&list, "id = ?", id).Error 
 	if err != nil {
-		return nil, fmt.Errorf("List not found: %v", err )
+		return nil, fmt.Errorf("List not found: %v", err)
+	}
+
+	for _, question := range list.Entries {
+		_, err := r.DeleteQuestion(ctx, question.ID)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to delete associated question with ID %s: %v", question.ID, err)
+		}
 	}
 
 	err = r.DB.Delete(&list).Error 

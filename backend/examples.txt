@@ -1,0 +1,90 @@
+query GetAllLists {
+  lists {
+    ID
+    title
+    entries {
+      ID
+	  url 
+      title
+    }
+  }
+}
+
+mutation CreateNewListWithQuestions {
+  createList(input: {
+    title: "New Test List",
+    description: "Dummy list",
+    entries: [
+      {
+        title: "Sort Characters by Frequency",
+        url: "https://leetcode.com/problems/sort-characters-by-frequency/description",
+        difficulty: MEDIUM,
+      },
+      {
+        title:"Count and Say",
+        url: "https://leetcode.com/problems/count-and-say/description/",
+        difficulty:MEDIUM
+      }
+    ]
+  }) {
+    ID
+    title
+    description
+    entries {
+      ID
+      title
+      url
+      difficulty
+      complete
+    }
+  }
+}
+
+query GetList {
+  list(id: "YOUR_LIST_ID") {
+    ID
+    title
+    description
+    entries {
+      ID
+      title
+      url
+      difficulty
+      complete
+    }
+  }
+}
+
+mutation UpdateListWithQuestions {
+  updateList(id: "ID GOES HERE", input: {
+    title: "My Awesome Test List",
+    description: "brand new description woohoo",
+    addQuestions: [
+      {
+        title: "Trapping Rain Water",
+        url: "https://leetcode.com/problems/trapping-rain-water/description/",
+        difficulty: HARD,
+      },
+    ],
+    removeQuestionIds: ["ID GOES HERE"]
+  }) {
+    ID
+    title
+    description
+    entries {
+      ID
+      title
+      url
+      difficulty
+      complete
+    }
+  }
+}
+
+
+mutation DeleteAList {
+  deleteList(id: "ID GOES HERE") {
+    ID
+    title
+  }
+}
