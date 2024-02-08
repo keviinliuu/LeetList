@@ -60,6 +60,3 @@ func main() {
 		log.Fatal("Error starting HTTP server: ", err)
 	}
 }
-
-// todo
-// - implement user creation and auth

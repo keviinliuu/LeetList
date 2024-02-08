@@ -19,6 +19,11 @@ type List {
   entries: [Question!]!
 }
 
+type User {
+  email: String!
+  password: String!
+}
+
 type QuestionInfo {
   title: String!
   difficulty: String!
@@ -47,6 +52,16 @@ input UpdateList {
   description: String
   addQuestions: [NewQuestion!]
   removeQuestionIds: [ID!]
+}
+
+input NewUser {
+  title: String!
+  password: String!
+}
+
+type AuthPayload {
+  token: String 
+  user: User
 }
 
 type Query {
@@ -84,4 +99,10 @@ type Mutation {
 
   # Delete a list 
   deleteList(id: ID!): List
+
+  # Register a new user
+  register(username: String!, password: String!): AuthPayload 
+
+  # Login
+  login(username: String!, password: String!): AuthPayload
 }

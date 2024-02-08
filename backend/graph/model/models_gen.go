@@ -8,6 +8,11 @@ import (
 	"strconv"
 )
 
+type AuthPayload struct {
+	Token *string `json:"token,omitempty"`
+	User  *User   `json:"user,omitempty"`
+}
+
 type List struct {
 	ID          string      `json:"ID"`
 	Title       string      `json:"title"`
@@ -28,6 +33,11 @@ type NewQuestion struct {
 	Title      string     `json:"title"`
 	URL        string     `json:"url"`
 	Difficulty Difficulty `json:"difficulty"`
+}
+
+type NewUser struct {
+	Title    string `json:"title"`
+	Password string `json:"password"`
 }
 
 type Query struct {
@@ -57,6 +67,11 @@ type UpdateQuestion struct {
 	Title      *string     `json:"title,omitempty"`
 	URL        *string     `json:"url,omitempty"`
 	Difficulty *Difficulty `json:"difficulty,omitempty"`
+}
+
+type User struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type Difficulty string
