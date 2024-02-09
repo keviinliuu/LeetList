@@ -55,7 +55,7 @@ input UpdateList {
 }
 
 input NewUser {
-  title: String!
+  email: String!
   password: String!
 }
 
@@ -101,8 +101,8 @@ type Mutation {
   deleteList(id: ID!): List
 
   # Register a new user
-  register(username: String!, password: String!): AuthPayload 
+  register(input: NewUser!): AuthPayload
 
   # Login
-  login(username: String!, password: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
 }

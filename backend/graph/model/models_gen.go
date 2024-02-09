@@ -36,7 +36,7 @@ type NewQuestion struct {
 }
 
 type NewUser struct {
-	Title    string `json:"title"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 

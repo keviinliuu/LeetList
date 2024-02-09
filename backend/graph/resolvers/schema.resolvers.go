@@ -188,15 +188,38 @@ func (r *mutationResolver) DeleteList(ctx context.Context, id string) (*model.Li
 }
 
 // Register is the resolver for the register field.
-func (r *mutationResolver) Register(ctx context.Context, username string, password string) (*model.AuthPayload, error) {
-	panic(fmt.Errorf("not implemented: Register - register"))
+func (r *mutationResolver) Register(ctx context.Context, input model.NewUser) (*model.AuthPayload, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
+	user := model.User{
+		Email: input.Email,
+		Password: string(hashedPassword),
+	}
+
+	err = r.DB.Create(&user).Error 
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := util.GenerateToken(user)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate token: %v", err)
+	}
+
+	return &model.AuthPayload{
+		Token: &token, 
+		User: &user,
+	}, nil
 }
 
 // Login is the resolver for the login field.
-func (r *mutationResolver) Login(ctx context.Context, username string, password string) (*model.AuthPayload, error) {
+func (r *mutationResolver) Login(ctx context.Context, email string, password string) (*model.AuthPayload, error) {
 	var user model.User
 
-	err := r.DB.Where("username = ?", username).First(&user).Error
+	err := r.DB.Where("email = ?", email).First(&user).Error
 	if err != nil {
 		return nil, fmt.Errorf("User not found.")
 	}
@@ -207,7 +230,10 @@ func (r *mutationResolver) Login(ctx context.Context, username string, password 
 	}
 
 	// generate JWT here
-	token := ""
+	token, err := util.GenerateToken(user)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate token: %v", err)
+	}
 
 	return &model.AuthPayload{
 		Token: &token,
