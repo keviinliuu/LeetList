@@ -1,4 +1,6 @@
-package graph
+package resolvers
+
+//go:generate go run github.com/99designs/gqlgen generate
 
 import (
 	"github.com/playwright-community/playwright-go"

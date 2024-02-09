@@ -1,4 +1,4 @@
-package graph
+package resolvers
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/keviinliuu/leetlist/graph"
 	"github.com/keviinliuu/leetlist/graph/model"
 	"github.com/keviinliuu/leetlist/util"
 	"golang.org/x/crypto/bcrypt"
@@ -193,9 +194,9 @@ func (r *mutationResolver) Register(ctx context.Context, username string, passwo
 
 // Login is the resolver for the login field.
 func (r *mutationResolver) Login(ctx context.Context, username string, password string) (*model.AuthPayload, error) {
-	var user model.User 
+	var user model.User
 
-	err := r.DB.Where("username = ?", username).First(&user).Error 
+	err := r.DB.Where("username = ?", username).First(&user).Error
 	if err != nil {
 		return nil, fmt.Errorf("User not found.")
 	}
@@ -205,12 +206,12 @@ func (r *mutationResolver) Login(ctx context.Context, username string, password 
 		return nil, fmt.Errorf("Invalid password.")
 	}
 
-	// generate JWT here 
+	// generate JWT here
 	token := ""
 
 	return &model.AuthPayload{
-		Token: &token, 
-		User: &user,
+		Token: &token,
+		User:  &user,
 	}, nil
 }
 
@@ -272,11 +273,11 @@ func (r *queryResolver) ScrapeQuestion(ctx context.Context, url string) (*model.
 	}, nil
 }
 
-// Mutation returns MutationResolver implementation.
-func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
+// Mutation returns graph.MutationResolver implementation.
+func (r *Resolver) Mutation() graph.MutationResolver { return &mutationResolver{r} }
 
-// Query returns QueryResolver implementation.
-func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
+// Query returns graph.QueryResolver implementation.
+func (r *Resolver) Query() graph.QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

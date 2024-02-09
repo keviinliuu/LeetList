@@ -10,6 +10,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/keviinliuu/leetlist/database"
 	"github.com/keviinliuu/leetlist/graph"
+	"github.com/keviinliuu/leetlist/graph/resolvers"
 	"github.com/keviinliuu/leetlist/util"
 )
 
@@ -39,7 +40,7 @@ func main() {
 
 	browser := util.InitBrowser()
 
-	resolver := &graph.Resolver{
+	resolver := &resolvers.Resolver{
 		DB: db,
 		Browser: browser,
 	}
