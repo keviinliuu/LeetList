@@ -14,7 +14,6 @@ import (
 	"github.com/keviinliuu/leetlist/graph"
 	"github.com/keviinliuu/leetlist/graph/model"
 	"github.com/keviinliuu/leetlist/util"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // CreateQuestion is the resolver for the createQuestion field.
@@ -198,14 +197,14 @@ func (r *mutationResolver) Register(ctx context.Context, input model.NewUser) (*
 		return nil, fmt.Errorf("A user with this email already exists.")
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	hashedPassword, err := util.GenerateHashPassword(input.Password)
 	if err != nil {
 		return nil, err
 	}
 
 	user := model.User{
 		Email: input.Email,
-		Password: string(hashedPassword),
+		Password: hashedPassword,
 	}
 
 	err = r.DB.Create(&user).Error 
@@ -233,7 +232,7 @@ func (r *mutationResolver) Login(ctx context.Context, email string, password str
 		return nil, fmt.Errorf("User not found.")
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	err = util.CompareHashPassword(password, user.Password)
 	if err != nil {
 		return nil, fmt.Errorf("Invalid password.")
 	}
