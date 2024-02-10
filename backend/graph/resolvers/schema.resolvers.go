@@ -6,11 +6,11 @@ package resolvers
 
 import (
 	"context"
-	"errors"
+	// "errors"
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/keviinliuu/leetlist/auth"
+	// "github.com/keviinliuu/leetlist/auth"
 	"github.com/keviinliuu/leetlist/graph"
 	"github.com/keviinliuu/leetlist/graph/model"
 	"github.com/keviinliuu/leetlist/util"
@@ -191,12 +191,12 @@ func (r *mutationResolver) DeleteList(ctx context.Context, id string) (*model.Li
 
 // Register is the resolver for the register field.
 func (r *mutationResolver) Register(ctx context.Context, input model.NewUser) (*model.AuthPayload, error) {
-	// var existingUser model.User 
+	var existingUser model.User 
 
-	// err := r.DB.Where("email = ?", input.Email).First(&existingUser).Error
-	// if err == nil {
-	// 	return nil, fmt.Errorf("A user with this email already exists.")
-	// }
+	err := r.DB.Where("email = ?", input.Email).First(&existingUser).Error
+	if err == nil {
+		return nil, fmt.Errorf("A user with this email already exists.")
+	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -263,10 +263,10 @@ func (r *queryResolver) Question(ctx context.Context, id string) (*model.Questio
 
 // Questions is the resolver for the questions field.
 func (r *queryResolver) Questions(ctx context.Context) ([]*model.Question, error) {
-	email, ok := ctx.Value(auth.UserCtxKey).(string)
-	if !ok || email == "" {
-		return nil, errors.New("Unauthorized: must be logged in")
-	}
+	// email, ok := ctx.Value(auth.UserCtxKey).(string)
+	// if !ok || email == "" {
+	// 	return nil, errors.New("Unauthorized: must be logged in")
+	// }
 
 	var questions []*model.Question
 
