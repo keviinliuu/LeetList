@@ -232,7 +232,7 @@ func (r *mutationResolver) Login(ctx context.Context, email string, password str
 		return nil, fmt.Errorf("User not found.")
 	}
 
-	err = util.CompareHashPassword(password, user.Password)
+	err = util.CompareHashPassword(user.Password, password)
 	if err != nil {
 		return nil, fmt.Errorf("Invalid password.")
 	}
