@@ -15,7 +15,7 @@ type contextKey struct {
 
 var UserCtxKey = &contextKey{"user"}
 
-func AuthMiddleware(next http.Handler) http.Handler {
+func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		header := r.Header.Get("Authorization")
 

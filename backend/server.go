@@ -8,6 +8,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/joho/godotenv"
+	"github.com/keviinliuu/leetlist/auth"
 	"github.com/keviinliuu/leetlist/database"
 	"github.com/keviinliuu/leetlist/graph"
 	"github.com/keviinliuu/leetlist/graph/resolvers"
@@ -53,7 +54,7 @@ func main() {
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	http.Handle("/query", auth.Middleware(srv))
 
 	log.Printf("Starting server on port %s\n", port)
 	err = http.ListenAndServe(":"+port, nil)
