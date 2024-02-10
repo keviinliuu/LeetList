@@ -35,18 +35,12 @@ func NewConnection(config *Config)(*gorm.DB, error) {
 }
 
 func AutoMigrate(db *gorm.DB) {
-	err := db.AutoMigrate(&model.Question{})
-	if err != nil {
-		log.Fatalf("Failed to auto migrate: %v", err)
-	}
-
-	err = db.AutoMigrate(&model.List{})
-	if err != nil {
-		log.Fatalf("Failed to auto migrate: %v", err)
-	}
-
-	err = db.AutoMigrate(&model.User{})
-	if err != nil {
-		log.Fatalf("Failed to auto migrate: %v", err)
-	}
+    err := db.AutoMigrate(
+        &model.Question{},
+        &model.List{},
+        &model.User{},
+    )
+    if err != nil {
+        log.Fatalf("Failed to auto migrate: %v", err)
+    }
 }
