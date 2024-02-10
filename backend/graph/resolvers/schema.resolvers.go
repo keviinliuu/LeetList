@@ -6,7 +6,9 @@ package resolvers
 
 import (
 	"context"
-	// "errors"
+	"errors"
+	"strings"
+
 	"fmt"
 
 	"github.com/google/uuid"
@@ -303,6 +305,10 @@ func (r *queryResolver) Lists(ctx context.Context) ([]*model.List, error) {
 
 // ScrapeQuestion is the resolver for the scrapeQuestion field.
 func (r *queryResolver) ScrapeQuestion(ctx context.Context, url string) (*model.QuestionInfo, error) {
+	if !strings.HasPrefix(url, "https://leetcode.com/problems/") {
+		return nil, errors.New("Not a valid Leetcode problem URL.")
+	}
+	
 	title, difficulty := util.GetQuestionInfo(url, r.Browser)
 
 	return &model.QuestionInfo{
