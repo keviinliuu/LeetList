@@ -14,7 +14,7 @@ type AuthPayload struct {
 }
 
 type List struct {
-	ID          string      `json:"ID"`
+	ID          string      `json:"ID" gorm:"primaryKey"`
 	Title       string      `json:"title"`
 	Description *string     `json:"description,omitempty"`
 	Entries     []*Question `gorm:"many2many:list_questions;"`
@@ -70,8 +70,9 @@ type UpdateQuestion struct {
 }
 
 type User struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string  `json:"email" gorm:"primaryKey;"`
+	Password string  `json:"password"`
+	Lists    []*List `json:"lists" gorm:"foreignKey:ID;constraint:OnDelete:CASCADE;"`
 }
 
 type Difficulty string

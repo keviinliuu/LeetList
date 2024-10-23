@@ -7,12 +7,10 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 
-	"fmt"
-
 	"github.com/google/uuid"
-	// "github.com/keviinliuu/leetlist/auth"
 	"github.com/keviinliuu/leetlist/graph"
 	"github.com/keviinliuu/leetlist/graph/model"
 	"github.com/keviinliuu/leetlist/util"
@@ -192,7 +190,7 @@ func (r *mutationResolver) DeleteList(ctx context.Context, id string) (*model.Li
 
 // Register is the resolver for the register field.
 func (r *mutationResolver) Register(ctx context.Context, input model.NewUser) (*model.AuthPayload, error) {
-	var existingUser model.User 
+	var existingUser model.User
 
 	err := r.DB.Where("email = ?", input.Email).First(&existingUser).Error
 	if err == nil {
@@ -205,11 +203,11 @@ func (r *mutationResolver) Register(ctx context.Context, input model.NewUser) (*
 	}
 
 	user := model.User{
-		Email: input.Email,
+		Email:    input.Email,
 		Password: hashedPassword,
 	}
 
-	err = r.DB.Create(&user).Error 
+	err = r.DB.Create(&user).Error
 	if err != nil {
 		return nil, err
 	}
@@ -220,8 +218,8 @@ func (r *mutationResolver) Register(ctx context.Context, input model.NewUser) (*
 	}
 
 	return &model.AuthPayload{
-		Token: &token, 
-		User: &user,
+		Token: &token,
+		User:  &user,
 	}, nil
 }
 
@@ -308,7 +306,7 @@ func (r *queryResolver) ScrapeQuestion(ctx context.Context, url string) (*model.
 	if !strings.HasPrefix(url, "https://leetcode.com/problems/") {
 		return nil, errors.New("Not a valid Leetcode problem URL.")
 	}
-	
+
 	title, difficulty := util.GetQuestionInfo(url, r.Browser)
 
 	return &model.QuestionInfo{
