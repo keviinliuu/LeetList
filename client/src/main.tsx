@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client'
 import axios from 'axios'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Home from './pages/Home.tsx'
+import Landing from './pages/Landing.tsx'
 import Login from './pages/Login.tsx'
 import Register from './pages/Register.tsx'
 import './main.css'
@@ -13,7 +13,7 @@ axios.defaults.baseURL = `http://localhost:${import.meta.env.VITE_ENDPOINT}/quer
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <Landing />,
   },
   {
     path: 'login',
