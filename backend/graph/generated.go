@@ -57,6 +57,7 @@ type ComplexityRoot struct {
 		Entries     func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Title       func(childComplexity int) int
+		UserID      func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -93,6 +94,7 @@ type ComplexityRoot struct {
 
 	User struct {
 		Email    func(childComplexity int) int
+		ID       func(childComplexity int) int
 		Lists    func(childComplexity int) int
 		Password func(childComplexity int) int
 	}
@@ -176,6 +178,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.List.Title(childComplexity), true
+
+	case "List.UserID":
+		if e.complexity.List.UserID == nil {
+			break
+		}
+
+		return e.complexity.List.UserID(childComplexity), true
 
 	case "Mutation.createList":
 		if e.complexity.Mutation.CreateList == nil {
@@ -378,6 +387,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Email(childComplexity), true
+
+	case "User.ID":
+		if e.complexity.User.ID == nil {
+			break
+		}
+
+		return e.complexity.User.ID(childComplexity), true
 
 	case "User.lists":
 		if e.complexity.User.Lists == nil {
@@ -844,6 +860,8 @@ func (ec *executionContext) fieldContext_AuthPayload_user(ctx context.Context, f
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "ID":
+				return ec.fieldContext_User_ID(ctx, field)
 			case "email":
 				return ec.fieldContext_User_email(ctx, field)
 			case "password":
@@ -1042,6 +1060,50 @@ func (ec *executionContext) fieldContext_List_entries(ctx context.Context, field
 	return fc, nil
 }
 
+func (ec *executionContext) _List_UserID(ctx context.Context, field graphql.CollectedField, obj *model.List) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_List_UserID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_List_UserID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "List",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_createQuestion(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createQuestion(ctx, field)
 	if err != nil {
@@ -1214,6 +1276,8 @@ func (ec *executionContext) fieldContext_Mutation_createList(ctx context.Context
 				return ec.fieldContext_List_description(ctx, field)
 			case "entries":
 				return ec.fieldContext_List_entries(ctx, field)
+			case "UserID":
+				return ec.fieldContext_List_UserID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type List", field.Name)
 		},
@@ -1276,6 +1340,8 @@ func (ec *executionContext) fieldContext_Mutation_updateList(ctx context.Context
 				return ec.fieldContext_List_description(ctx, field)
 			case "entries":
 				return ec.fieldContext_List_entries(ctx, field)
+			case "UserID":
+				return ec.fieldContext_List_UserID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type List", field.Name)
 		},
@@ -1402,6 +1468,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteList(ctx context.Context
 				return ec.fieldContext_List_description(ctx, field)
 			case "entries":
 				return ec.fieldContext_List_entries(ctx, field)
+			case "UserID":
+				return ec.fieldContext_List_UserID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type List", field.Name)
 		},
@@ -1697,6 +1765,8 @@ func (ec *executionContext) fieldContext_Query_list(ctx context.Context, field g
 				return ec.fieldContext_List_description(ctx, field)
 			case "entries":
 				return ec.fieldContext_List_entries(ctx, field)
+			case "UserID":
+				return ec.fieldContext_List_UserID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type List", field.Name)
 		},
@@ -1759,6 +1829,8 @@ func (ec *executionContext) fieldContext_Query_lists(ctx context.Context, field 
 				return ec.fieldContext_List_description(ctx, field)
 			case "entries":
 				return ec.fieldContext_List_entries(ctx, field)
+			case "UserID":
+				return ec.fieldContext_List_UserID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type List", field.Name)
 		},
@@ -2261,6 +2333,50 @@ func (ec *executionContext) fieldContext_QuestionInfo_difficulty(ctx context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _User_ID(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_ID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_User_ID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_User_email(ctx, field)
 	if err != nil {
@@ -2396,6 +2512,8 @@ func (ec *executionContext) fieldContext_User_lists(ctx context.Context, field g
 				return ec.fieldContext_List_description(ctx, field)
 			case "entries":
 				return ec.fieldContext_List_entries(ctx, field)
+			case "UserID":
+				return ec.fieldContext_List_UserID(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type List", field.Name)
 		},
@@ -4183,7 +4301,7 @@ func (ec *executionContext) unmarshalInputNewList(ctx context.Context, obj inter
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "description", "entries"}
+	fieldsInOrder := [...]string{"title", "description", "entries", "UserID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4206,11 +4324,18 @@ func (ec *executionContext) unmarshalInputNewList(ctx context.Context, obj inter
 			it.Description = data
 		case "entries":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("entries"))
-			data, err := ec.unmarshalNNewQuestion2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestionᚄ(ctx, v)
+			data, err := ec.unmarshalONewQuestion2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestionᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Entries = data
+		case "UserID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("UserID"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UserID = data
 		}
 	}
 
@@ -4452,6 +4577,11 @@ func (ec *executionContext) _List(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._List_description(ctx, field, obj)
 		case "entries":
 			out.Values[i] = ec._List_entries(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "UserID":
+			out.Values[i] = ec._List_UserID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -4811,6 +4941,11 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("User")
+		case "ID":
+			out.Values[i] = ec._User_ID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "email":
 			out.Values[i] = ec._User_email(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -5271,23 +5406,6 @@ func (ec *executionContext) unmarshalNNewList2githubᚗcomᚋkeviinliuuᚋleetli
 func (ec *executionContext) unmarshalNNewQuestion2githubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestion(ctx context.Context, v interface{}) (model.NewQuestion, error) {
 	res, err := ec.unmarshalInputNewQuestion(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNNewQuestion2ᚕᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestionᚄ(ctx context.Context, v interface{}) ([]*model.NewQuestion, error) {
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*model.NewQuestion, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNNewQuestion2ᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestion(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
 }
 
 func (ec *executionContext) unmarshalNNewQuestion2ᚖgithubᚗcomᚋkeviinliuuᚋleetlistᚋgraphᚋmodelᚐNewQuestion(ctx context.Context, v interface{}) (*model.NewQuestion, error) {

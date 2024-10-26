@@ -17,9 +17,11 @@ type List {
   title: String!
   description: String
   entries: [Question!]!
+  UserID: String!
 }
 
 type User {
+  ID: ID!
   email: String!
   password: String!
   lists: [List]!
@@ -45,7 +47,8 @@ input UpdateQuestion {
 input NewList {
   title: String!
   description: String
-  entries: [NewQuestion!]!
+  entries: [NewQuestion!]
+  UserID: String!
 }
 
 input UpdateList {

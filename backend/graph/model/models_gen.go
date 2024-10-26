@@ -14,10 +14,11 @@ type AuthPayload struct {
 }
 
 type List struct {
-	ID          string      `json:"ID" gorm:"primaryKey"`
+	ID          string      `json:"ID"`
 	Title       string      `json:"title"`
 	Description *string     `json:"description,omitempty"`
 	Entries     []*Question `gorm:"many2many:list_questions;"`
+	UserID      string      `json:"UserID" gorm:"index"`
 }
 
 type Mutation struct {
@@ -26,7 +27,8 @@ type Mutation struct {
 type NewList struct {
 	Title       string         `json:"title"`
 	Description *string        `json:"description,omitempty"`
-	Entries     []*NewQuestion `json:"entries"`
+	Entries     []*NewQuestion `json:"entries,omitempty"`
+	UserID      string         `json:"UserID"`
 }
 
 type NewQuestion struct {
@@ -70,9 +72,10 @@ type UpdateQuestion struct {
 }
 
 type User struct {
-	Email    string  `json:"email" gorm:"primaryKey;"`
+	ID       string  `json:"ID" gorm:"primaryKey;unique"`
+	Email    string  `json:"email"`
 	Password string  `json:"password"`
-	Lists    []*List `json:"lists" gorm:"foreignKey:ID;constraint:OnDelete:CASCADE;"`
+	Lists    []*List `json:"lists"`
 }
 
 type Difficulty string

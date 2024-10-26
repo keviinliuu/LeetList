@@ -63,10 +63,16 @@ func (r *mutationResolver) UpdateQuestion(ctx context.Context, id string, input 
 
 // CreateList is the resolver for the createList field.
 func (r *mutationResolver) CreateList(ctx context.Context, input model.NewList) (*model.List, error) {
+	var user model.User
+	if err := r.DB.Where("ID = ?", input.UserID).First(&user).Error; err != nil {
+		return nil, fmt.Errorf("user not found")
+	}
+
 	list := model.List{
 		ID:          uuid.New().String(),
 		Title:       input.Title,
 		Description: input.Description,
+		UserID:      user.ID,
 	}
 
 	entries := []*model.Question{}
@@ -87,6 +93,11 @@ func (r *mutationResolver) CreateList(ctx context.Context, input model.NewList) 
 
 	err := r.DB.Create(&list).Error
 	if err != nil {
+		return nil, err
+	}
+
+	user.Lists = append(user.Lists, &list)
+	if err := r.DB.Save(&user).Error; err != nil {
 		return nil, err
 	}
 
@@ -153,12 +164,12 @@ func (r *mutationResolver) DeleteQuestion(ctx context.Context, id string) (*mode
 	}
 
 	if err := r.DB.Exec("DELETE FROM list_questions WHERE question_id = ?", id).Error; err != nil {
-		return nil, fmt.Errorf("Failed to disassociate question from lists: %v", err)
+		return nil, fmt.Errorf("failed to disassociate question from lists: %v", err)
 	}
 
 	err = r.DB.Delete(&question).Error
 	if err != nil {
-		return nil, fmt.Errorf("Failed to delete question: %v", err)
+		return nil, fmt.Errorf("failed to delete question: %v", err)
 	}
 
 	return nil, nil
@@ -176,13 +187,13 @@ func (r *mutationResolver) DeleteList(ctx context.Context, id string) (*model.Li
 	for _, question := range list.Entries {
 		_, err := r.DeleteQuestion(ctx, question.ID)
 		if err != nil {
-			return nil, fmt.Errorf("Failed to delete associated question with ID %s: %v", question.ID, err)
+			return nil, fmt.Errorf("failed to delete associated question with ID %s: %v", question.ID, err)
 		}
 	}
 
 	err = r.DB.Delete(&list).Error
 	if err != nil {
-		return nil, fmt.Errorf("Failed to delete list: %v", err)
+		return nil, fmt.Errorf("failed to delete list: %v", err)
 	}
 
 	return &list, nil
@@ -194,7 +205,7 @@ func (r *mutationResolver) Register(ctx context.Context, input model.NewUser) (*
 
 	err := r.DB.Where("email = ?", input.Email).First(&existingUser).Error
 	if err == nil {
-		return nil, fmt.Errorf("A user with this email already exists.")
+		return nil, fmt.Errorf("a user with this email already exists")
 	}
 
 	hashedPassword, err := util.GenerateHashPassword(input.Password)
@@ -203,6 +214,7 @@ func (r *mutationResolver) Register(ctx context.Context, input model.NewUser) (*
 	}
 
 	user := model.User{
+		ID:       uuid.New().String(),
 		Email:    input.Email,
 		Password: hashedPassword,
 	}
@@ -214,7 +226,7 @@ func (r *mutationResolver) Register(ctx context.Context, input model.NewUser) (*
 
 	token, err := util.GenerateToken(user)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to generate token: %v", err)
+		return nil, fmt.Errorf("failed to generate token: %v", err)
 	}
 
 	return &model.AuthPayload{
@@ -229,17 +241,17 @@ func (r *mutationResolver) Login(ctx context.Context, email string, password str
 
 	err := r.DB.Where("email = ?", email).First(&user).Error
 	if err != nil {
-		return nil, fmt.Errorf("User not found.")
+		return nil, fmt.Errorf("user not found")
 	}
 
 	err = util.CompareHashPassword(user.Password, password)
 	if err != nil {
-		return nil, fmt.Errorf("Invalid password.")
+		return nil, fmt.Errorf("invalid password")
 	}
 
 	token, err := util.GenerateToken(user)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to generate token: %v", err)
+		return nil, fmt.Errorf("failed to generate token: %v", err)
 	}
 
 	return &model.AuthPayload{
@@ -304,7 +316,7 @@ func (r *queryResolver) Lists(ctx context.Context) ([]*model.List, error) {
 // ScrapeQuestion is the resolver for the scrapeQuestion field.
 func (r *queryResolver) ScrapeQuestion(ctx context.Context, url string) (*model.QuestionInfo, error) {
 	if !strings.HasPrefix(url, "https://leetcode.com/problems/") {
-		return nil, errors.New("Not a valid Leetcode problem URL.")
+		return nil, errors.New("not a valid Leetcode problem URL")
 	}
 
 	title, difficulty := util.GetQuestionInfo(url, r.Browser)
