@@ -313,6 +313,16 @@ func (r *queryResolver) Lists(ctx context.Context) ([]*model.List, error) {
 	return lists, nil
 }
 
+func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
+	var user model.User
+
+	if err := r.DB.Preload("Lists.Entries").First(&user, "id = ?", id).Error; err != nil {
+		return nil, fmt.Errorf("user not found: %v", err)
+	}
+
+	return &user, nil
+}
+
 // ScrapeQuestion is the resolver for the scrapeQuestion field.
 func (r *queryResolver) ScrapeQuestion(ctx context.Context, url string) (*model.QuestionInfo, error) {
 	if !strings.HasPrefix(url, "https://leetcode.com/problems/") {

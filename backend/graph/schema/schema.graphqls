@@ -81,6 +81,9 @@ type Query {
   # Fetch all lists
   lists: [List!]
 
+  # Fetch a user
+  user(id: ID!): User
+
   # Scrape the question and get its info
   scrapeQuestion(url: String!): QuestionInfo
 }
