@@ -13,6 +13,7 @@ import (
 	"github.com/keviinliuu/leetlist/graph"
 	"github.com/keviinliuu/leetlist/graph/resolvers"
 	"github.com/keviinliuu/leetlist/util"
+	"github.com/rs/cors"
 )
 
 const defaultPort = "8080"
@@ -56,8 +57,13 @@ func main() {
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", auth.Middleware(srv))
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:5173"},
+		AllowCredentials: true,
+	})
+
 	log.Printf("Starting server on port %s\n", port)
-	err = http.ListenAndServe(":"+port, nil)
+	err = http.ListenAndServe(":"+port, c.Handler(http.DefaultServeMux))
 	if err != nil {
 		log.Fatal("Error starting HTTP server: ", err)
 	}

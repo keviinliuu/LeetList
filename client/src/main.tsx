@@ -4,9 +4,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import Home from './pages/Home.tsx'
 import Login from './pages/Login.tsx'
+import Register from './pages/Register.tsx'
 import './main.css'
 
-axios.defaults.baseURL = `http://localhost:${import.meta.env.GRAPHQL_PORT}/query/`;
+// env variables must start with VITE_ to be discoverable
+axios.defaults.baseURL = `http://localhost:${import.meta.env.VITE_ENDPOINT}/query`;
 
 const router = createBrowserRouter([
   {
@@ -16,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: 'login',
     element: <Login />
+  },
+  {
+    path: 'register',
+    element: <Register />
   }
 ])
 
