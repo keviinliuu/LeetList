@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import Logo from '../assets/logo.png'
@@ -7,6 +7,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         const query = `
@@ -32,7 +33,10 @@ export default function Login() {
                 setError(result.errors[0].message);
             }
             else {
-                const { user } = result.data.login;
+                const { token, user } = result.data.login;
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(user));
+                navigate('/home')
                 console.log('Login successful', user);
             }
         } catch (err) {

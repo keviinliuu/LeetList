@@ -5,6 +5,7 @@ go 1.21.5
 require (
 	github.com/99designs/gqlgen v0.17.42
 	github.com/playwright-community/playwright-go v0.4001.0
+	github.com/rs/cors v1.11.1
 	github.com/vektah/gqlparser/v2 v2.5.10
 	golang.org/x/crypto v0.18.0
 	gorm.io/gorm v1.25.6
@@ -20,7 +21,6 @@ require (
 	github.com/jackc/pgx/v5 v5.4.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/rs/cors v1.11.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/net v0.20.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
