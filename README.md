@@ -1,5 +1,7 @@
 # LeetList
 
+![leelist](https://github.com/user-attachments/assets/3691b97e-c768-4602-9493-75f9176370a2)
+
 ## What is LeetList?
 
 LeetList is a webapp service for creating and tracking your own list of LeetCode questions. This project is inspired by premade lists on the internet like [Grind 75](https://www.techinterviewhandbook.org/grind75) and [Neetcode 150](https://neetcode.io/practice). 
