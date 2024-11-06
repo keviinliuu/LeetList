@@ -9,28 +9,25 @@ interface QuestionInfo {
 }
 
 export default function CreateList() {
-    const testId = "abc";
+    const UserID = "a675e6a6-2bdd-4a76-898b-0719603614a0";
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [questionEntries, setQuestionEntries] = useState<QuestionInfo[]>([]);
     const [error, setError] = useState<string | null>(null);
 
-    // Function to add a new empty QuestionEntry
     const addQuestionEntry = () => {
         setQuestionEntries([...questionEntries, { title: '', url: '', difficulty: '' }]);
     };
 
-    // Function to update question entry data
     const updateQuestionEntry = (index: number, data: QuestionInfo) => {
         const newEntries = [...questionEntries];
         newEntries[index] = data;
         setQuestionEntries(newEntries);
     };
 
-    // Function to handle list creation
     const handleCreateList = async () => {
         const query = `
-            mutation CreateList($input: CreateListInput!) {
+            mutation CreateList($input: NewList!) {
                 createList(input: $input) {
                     ID
                     title
@@ -51,12 +48,12 @@ export default function CreateList() {
             input: {
                 title,
                 description,
+                UserID,
                 entries: questionEntries.map(({ title, url, difficulty }) => ({
                     title,
                     url,
-                    difficulty,
+                    difficulty: difficulty.toUpperCase()
                 })),
-                testId
             },
         };
 
@@ -70,7 +67,7 @@ export default function CreateList() {
                 setError(result.errors[0].message);
             } else {
                 console.log('List created successfully:', result.data.createList);
-                // You could redirect to a success page or clear the form
+                // REDIRECT TO RESULT PAGE
             }
         } catch (err) {
             console.error('Error creating list:', err);
@@ -82,7 +79,6 @@ export default function CreateList() {
         <div className='flex flex-col min-h-screen w-screen bg-richBlack text-cerulean text-3xl font-main items-center'>
             <h1 className='text-4xl p-5'>Create a New List</h1>
 
-            {/* Title and Description Inputs */}
             <input
                 type="text"
                 placeholder="List Title"
@@ -97,7 +93,6 @@ export default function CreateList() {
                 className="border-2 border-gray-400 rounded-md p-2 mb-4 w-1/2 text-sm"
             />
 
-            {/* Render each QuestionEntry */}
             {questionEntries.map((_, index) => (
                 <QuestionEntry
                     key={index}
@@ -105,7 +100,6 @@ export default function CreateList() {
                 />
             ))}
 
-            {/* Plus button to add new QuestionEntry */}
             <button
                 onClick={addQuestionEntry}
                 className='bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center mt-4'
@@ -113,7 +107,6 @@ export default function CreateList() {
                 +
             </button>
 
-            {/* Create List Button */}
             <button
                 onClick={handleCreateList}
                 className="bg-green-500 text-white rounded-md p-2 mt-6 text-lg"
@@ -121,7 +114,6 @@ export default function CreateList() {
                 Create List
             </button>
 
-            {/* Error Message */}
             {error && <div className="text-red-500 mt-4">{error}</div>}
         </div>
     );
